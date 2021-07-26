@@ -1,17 +1,20 @@
 // proper dsu
 // random dsu is about 8s, size dsu is about 2.6s (https://codeforces.com/blog/entry/47402)
-// I'm probably going to use the 2 line dsu most of the time anyway though
-// not tested
 struct DSU{
-	vector<int>p,size;
-	DSU(int n):p(n),size(n){iota(p.begin(),p.end(),0);}
-	int find(int u){return p[u]==u?u:p[u]=find(p[u]);}
+	int cmp;
+	vector<int>p; // -size if self, parent otherwise
+	DSU(int n):cmp(n),p(n,-1){}
+	int find(int u){return p[u]<0?u:p[u]=find(p[u]);}
+	int size(int u){return -p[find(u)];}
 	bool same(int u,int v){return find(u)==find(v);}
-//	void uni(int u,int v){p[find(u)]=find(v);}
+	int comps(){return cmp;}
 	void uni(int u,int v){
-		u=find(u);v=find(v);
-		if(size[u]>size[v])swap(u,v);
-		p[u]=p[v];
-		if(u!=v)size[v]+=size[u];
+		u=find(u),v=find(v);
+		if(u!=v){
+			if(size(u)>size(v))swap(u,v);
+			p[v]+=p[u];
+			p[u]=v;
+			--cmp;
+		}
 	}
 };

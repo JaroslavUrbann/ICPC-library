@@ -1,3 +1,5 @@
+// there is no such thing as an articulation tree, don't even think about it
+// quite terrible, rework with comments please
 // slightly tested
 // creates a dfs tree and if at least one of my children doesn't have a backedge
 // that goes above me, I'm an articulation point

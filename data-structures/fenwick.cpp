@@ -7,6 +7,7 @@ template<class T>
 struct Fenwick{
 	T n;vector<T>a;
 	Fenwick(int n):n(n),a(n){}; 
+	T query(int l,int r){return query(r-1)-query(l-1);}
 	T query(int i){
 		T r=0;
 		for(;i;i-=i&-i)r+=a[i];

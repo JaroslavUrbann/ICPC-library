@@ -2,12 +2,20 @@
 __gnu_pbds::gp_hash_table<int,int>real2fake;
 vector<int>fake2real;
 
-vector<int>compress(vector<int>a){
-	fake2real=a;
-	sort(fake2real.begin(),fake2real.end());
-	fake2real.erase(unique(fake2real.begin(),fake2real.end()),fake2real.end());
-	for(int i=0;i<fake2real.size();++i)real2fake[fake2real[i]]=i;
-	vector<int>res;
-	for(auto v:a)res.push_back(real2fake[v]);
-	return res;
+// not tested
+// other == inits real2fake
+void compress(vector<int>&a,bool other=false){
+	int n=a.size();
+	vector<pair<int,int>>vals(n);
+	for(int i=0;i<n;++i)vals[i]={a[i],i};
+	sort(vals.begin(),vals.end());
+	int pri=-1,prv=-1;
+	for(auto[v,i]:vals){
+		if(v!=prv){
+			prv=v,++pri;
+			fake2real.push_back(v);
+			if(other)real2fake[v]=pri;
+		}
+		a[i]=pri;
+	}
 }
