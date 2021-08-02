@@ -32,9 +32,9 @@ H operator-(H l, H r) {
 H operator*(H l, H r) { 
 	for(int i=0;i<2;++i) l[i] = (ll)l[i]*r[i]%MOD;
 	return l; }
-/// H& operator+=(H& l, H r) { return l = l+r; }
-/// H& operator-=(H& l, H r) { return l = l-r; }
-/// H& operator*=(H& l, H r) { return l = l*r; }
+H& operator+=(H& l, H r) { return l = l+r; }
+H& operator-=(H& l, H r) { return l = l-r; }
+H& operator*=(H& l, H r) { return l = l*r; }
 
 vector<H>pows{{1,1}};
 struct HashRange {

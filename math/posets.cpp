@@ -10,5 +10,10 @@ The height of a poset is the size of the maximum chain
 You can calculate the width by maximum matching:
 1) split each node into two (input and output) (becomes bipartite)
 2) |unmatched verticies| / 2 == |minimal partition|
-3) I don't know how to extract the chain.
+3) => nodes not in vertex cover have the same cardinality
+   and aren't comparable => that's your maximum antichain
+
+mirsky's theorem:
+you can partition a poset into n antichains, where n is the length of the longest chain
+(just pop all sources n times)
 */

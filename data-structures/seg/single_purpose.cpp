@@ -42,3 +42,19 @@ struct max_add{
 	static T upd(T&a,T b){return a+=b;}
 	static T uni(T a,T b){return max(a,b);}
 };
+
+struct min_add{
+	typedef int T;
+	static const T D=numeric_limits<T>::max(),DL=0;
+	static T rv(T val,T lz,int lb,int rb){return val+lz;}
+	static T upd(T&a,T b){return a+=b;}
+	static T uni(T a,T b){return min(a,b);}
+};
+
+struct min_set{
+	typedef int T;
+	static const T D=numeric_limits<T>::max(),DL=0;
+	static T rv(T val,T lz,int lb,int rb){return lz?lz:val;}
+	static T upd(T&a,T b){return a=b;}
+	static T uni(T a,T b){return min(a,b);}
+};

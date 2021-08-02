@@ -12,7 +12,7 @@ struct Kosaraju{
 	vector<vector<int>>vis;
 	vector<int>sorted,p;
 	Kosaraju(int n):n(n),g(n,vector<vector<int>>(2)),vis(n,vector<int>(2)),p(n){}
-	void add_edge(int u,int v){
+	void ae(int u,int v){
 		g[u][0].push_back(v);
 		g[v][1].push_back(u);
 	}
@@ -23,7 +23,8 @@ struct Kosaraju{
 		if(!r)sorted.push_back(u);
 		else p[u]=k;
 	}
-	vector<int>getp(){ // comp of each node, 0->k-1
+	// res[u] = id of parent component [0,k-1]
+	vector<int>getp(){
 		for(int i=0;i<n;++i)dfs(i,0);
 		for(int i=n-1;i>=0;--i)
 			if(!vis[sorted[i]][1]){
@@ -32,6 +33,7 @@ struct Kosaraju{
 			}
 		return p;
 	}
+	// graph with compressed sccs
 	vector<vector<int>>getg(){
 		vector<int>p=getp();
 		vector<vector<int>>res(k);

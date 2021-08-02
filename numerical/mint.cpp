@@ -39,10 +39,11 @@ struct modnum{
 };
 using mint=modnum<mod,5>;
 
-//mint F[N];
+//const int MX=;
+//mint F[MX];
 //mint choose(int n,int k){
 //	if(k>n||k<0)return 0;
 //	return F[n]/F[k]/F[n-k];
 //}
 //F[0]=1;
-//for(int i=1;i<N;++i)F[i]=F[i-1]*i;
+//for(int i=1;i<MX;++i)F[i]=F[i-1]*i;

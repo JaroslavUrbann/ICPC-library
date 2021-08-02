@@ -25,3 +25,13 @@ struct maxq{
 	operator T(){return x;}
 	static maxq uni(maxq a,maxq b){return maxq(max(a.x,b.x),a.x<b.x?b.idx:a.idx);}
 };
+
+struct gcdq{
+	typedef ll T;
+	static const T D=0;
+	T x;
+	gcdq(T x=D):x(x){}
+	operator T(){return x;}
+	static gcdq uni(gcdq a,gcdq b){return gcdq(__gcd(a.x,b.x));}
+};
+

@@ -1,16 +1,15 @@
-// currently doing:
-// query: max
-// update: set
 // you have to set values to nodes/edges manually
+// (can't init st trivialy since order is changed)
 // seg trees go from top to bottom, always following the first child
-template<bool E,typename T>
+template<bool E,class O>
 struct HLD{
+	using T=typename O::T;
 	int n,tim=0;
 	vector<vector<int>>g;
 	// parent, size of subtree, depth, position of u in memory, root of segtree
 	vector<int>p,sz,d,pos,rt;
-	SegmentTree<T>st;
-	HLD(vector<vector<int>>g):n(g.size()),g(g),p(n),sz(n,1),d(n),pos(n),rt(n),
+	SegmentTree<O>st;
+	HLD(vector<vector<int>>&g):n(g.size()),g(g),p(n),sz(n,1),d(n),pos(n),rt(n),
 														st(vector<T>(n)){dfsz(0);dfshld(0);} // c?
 	void dfsz(int u){
 		g[u].erase(remove(g[u].begin(),g[u].end(),p[u]),g[u].end());
@@ -38,11 +37,10 @@ struct HLD{
 		op(pos[v]+E,pos[u]+1);
 	}
 	void update(int u,int v,T val){walk(u,v,[&](int l,int r){st.update(l,r,val);});}
-	T query(int u,int v){ // c
-		T res=INT_MIN;
-		walk(u,v,[&](int l,int r){res=max(res,st.query(l,r,res));});
+	T query(int u,int v){
+		T res=O::D;
+		walk(u,v,[&](int l,int r){res=min(res,st.query(l,r));});
 		return res;
 	}
 	T querytree(int u){return st.query(pos[u]+E,pos[u]+sz[u]+1);}
 };
-
