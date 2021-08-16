@@ -1,7 +1,7 @@
 // always index from 1 to n & init with n+1
 template<class T>
 struct BIT{
-	T n;vector<T>a;
+	int n;vector<T>a;
 	BIT(int n):n(n),a(n){}; 
 	T query(int l,int r){return query(r-1)-query(l-1);}
 	T query(int i){

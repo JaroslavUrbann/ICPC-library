@@ -1,13 +1,4 @@
 /*
-Searching all occurrences of one string of length n in another string length m in O(n + m) time
-Searching for the largest common substring of two strings of lengths n and m (n ≥ m) in O((n + m·log(n))·log(m)) and O(n·log(m)) time
-Finding the lexicographically minimal cyclic shift of a string of length n in O(n·log(n)) time
-Sorting of all cyclic shifts of a string of length n in lexicographic order in O(n·log(n)2) time
-Finding the number of sub-palindromes of a string of length n in O(n·log(n)) time
-The number of substrings of string of length n that are cyclic shifts of the another string length m in O((n + m)·log(n)) time
-The number of suffixes of a string of length n, the infinite extension of which coincides with the infinite extension of the given string for O(n·log(n)) (extension is a duplicate string an infinite number of times).
-Largest common prefix of two strings length n with swapping two chars in one of them O(n·log(n))
-
 bloom filters (aka set for hashes):
 just create a bitset and turn on kth bit if you want to insert a string with hash k
 - can't remove strings
@@ -15,7 +6,7 @@ just create a bitset and turn on kth bit if you want to insert a string with has
 */
 
 // https://github.com/bqi343/USACO/blob/master/Implementations/content/strings%20(14)/Light/HashRange%20(14.2).h
-const int MOD=INT_MAX;
+const int MOD=998244353;
 using H = array<int,2>; // bases not too close to ends 
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 uniform_int_distribution<int> BDIST(0.1*MOD,0.9*MOD);
@@ -35,15 +26,31 @@ H operator*(H l, H r) {
 H& operator+=(H& l, H r) { return l = l+r; }
 H& operator-=(H& l, H r) { return l = l-r; }
 H& operator*=(H& l, H r) { return l = l*r; }
+ostream&operator<<(ostream&s,H h){return s<<"("<<h[0]<<", "<<h[1]<<")";}
 
-vector<H>pows{{1,1}};
+H gpw(int i){
+	static vector<H>pows{{1,1}};
+	while(pows.size()<=i)pows.push_back(pows.back()*base);
+	return pows[i];
+}
+
+// only reasonable sizes, otherwise use modpow instead of gpw
+// was noticeably slower than doing concatenations manually
+// (maybe it was keeping sz, didn't need it in that problem)
+struct HR{
+	int sz;H h;
+	HR(char c=0):sz(!!c),h(makeH(c)){}
+};
+HR operator+(HR a,HR b){b.h+=gpw(b.sz)*a.h,b.sz+=a.sz;return b;}
+HR&operator+=(HR&a,HR b){return a=a+b;}
+bool operator==(HR a,HR b){return tie(a.sz,a.h)==tie(b.sz,b.h);}
+ostream&operator<<(ostream&s,HR a){return s<<"size: "<<a.sz<<", hash: "<<a.h;}
+
 struct HashRange {
 	string S; vector<H> cum{{}};
 	void add(char c) { S += c; cum.push_back(base*cum.back()+makeH(c)); }
 	void add(string s) { for(auto c:s) add(c); }
-	void extend(int len) { while (pows.size() <= len) pows.push_back(base*pows.back()); }
-	H hash(int l, int r) { extend(r-l); // inclusive, exclusive
-		return cum[r]-pows[r-l]*cum[l]; }
+	H hash(int l, int r) { return cum[r]-gpw(r-l)*cum[l]; }
 	/**int lcp(HashRange& b) { return first_true([&](int x) { 
 		return cum[x] != b.cum[x]; },0,min(sz(S),sz(b.S)))-1; }*/
 };

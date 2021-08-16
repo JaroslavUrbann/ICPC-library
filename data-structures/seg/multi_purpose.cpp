@@ -2,9 +2,9 @@
 // not really tested / used
 // not exactly fast so far
 template<class T>
-struct SegmentTree{
+struct ST{
 	int n;vector<T>t;
-	SegmentTree(const vector<T>&a):n(1<<int(1+log2(a.size()))),t(2*n){
+	ST(const vector<T>&a):n(1<<int(1+log2(a.size()))),t(2*n){
 		copy(a.begin(),a.end(),t.begin()+n);
 		for(int i=n-1;i>0;--i)t[i]=T::uni(t[2*i],t[2*i+1]);
 	}
@@ -47,8 +47,34 @@ struct mac{
 		}
 	}
 	static mac rv(const mac&u,int lb,int rb){return mac(u.mn+u.lz,DL,u.cnt);}
+	// only used once each query
 	static mac upd(mac&u,mac&v,int lb,int rb){ // returns u, v is probably bs
 		return u=mac(u.mn,u.lz+v.lz,u.cnt); // update with lazy
 	}
 };
 
+// slightly tested
+// x=max(x,update) + keeps id of query
+struct maxeq{
+	typedef int T;
+	static const T D=numeric_limits<T>::min(),DL=0;
+	T mx,lz,id;
+	maxeq(T mx=D,T lz=DL,T id=-1):mx(mx),lz(lz),id(id){}
+	// children have no lazy
+	static maxeq uni(const maxeq&a,const maxeq&b){
+		return maxeq(max(a.mx,b.mx),DL,a.mx<b.mx?b.id:a.id);
+	}
+	static void prop(maxeq&p,maxeq&l,maxeq&r,int lb,int rb){
+		if(p.lz!=DL){
+			if(rv(l,lb,rb).mx<=p.lz)tie(l.lz,l.id)=tie(p.lz,p.id);
+			if(rv(r,lb,rb).mx<=p.lz)tie(r.lz,r.id)=tie(p.lz,p.id);
+			p.mx=p.lz;
+			p.lz=DL;
+		}
+	}
+	static maxeq rv(const maxeq&u,int lb,int rb){return maxeq(u.lz?u.lz:u.mx,DL,u.id);}
+	// only used once per query
+	static maxeq upd(maxeq&u,maxeq&v,int lb,int rb){
+		return u=maxeq(u.mx,rv(u,lb,rb).mx<=v.lz?v.lz:u.lz,rv(u,lb,rb).mx<=v.lz?v.id:u.id);
+	}
+};

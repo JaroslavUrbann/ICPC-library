@@ -61,5 +61,18 @@ for some positive integers x,y. (especially nice if n and m are coprime)
 number of trees with n (labeled) vertices: n^(n-2) (prufer code)
 number of binary search trees (unlabeled) (left vs right child matters): (2n)!/(n+1)!/n!
 
+E(X^2):
+for each i:
+	for each j:
+		ans+=P(i,j)
+
+since result for one answer is:
+for each i:ans+=(i happened)
+return ans*ans
+which is equivalent to:
+for each i:
+	for each j:
+		ans+=(i and j happened)
+return ans
 
 */

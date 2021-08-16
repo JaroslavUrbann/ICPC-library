@@ -2,8 +2,8 @@
 __gnu_pbds::gp_hash_table<int,int>real2fake;
 vector<int>fake2real;
 
-// not tested
 // other == inits real2fake
+// use it only if it's really necessary, it's very slow
 void compress(vector<int>&a,bool other=false){
 	int n=a.size();
 	vector<pair<int,int>>vals(n);

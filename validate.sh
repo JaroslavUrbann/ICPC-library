@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
+# validator gets concatenated input and solution and outputs OK
 # validate.sh solution validator generator numTests
-# validator gets concatenated input and solution
  
 g++ "$1" -o sol
 g++ "$2" -o val

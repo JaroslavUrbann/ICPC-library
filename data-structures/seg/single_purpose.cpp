@@ -1,9 +1,9 @@
 // seg tree for one operation
 template<class O>
-struct SegmentTree{
+struct ST{
 	using T=typename O::T;
 	int n;vector<T>tr,lz;
-	SegmentTree(vector<T>a):n(1<<int(1+log2(a.size()))),tr(2*n,O::D),lz(2*n,O::DL){
+	ST(vector<T>a):n(1<<int(1+log2(a.size()))),tr(2*n,O::D),lz(2*n,O::DL){
 		copy(a.begin(),a.end(),tr.begin()+n);
 		for(int i=n-1;i>0;--i)tr[i]=O::uni(tr[2*i],tr[2*i+1]);
 	}
@@ -58,3 +58,13 @@ struct min_set{
 	static T upd(T&a,T b){return a=b;}
 	static T uni(T a,T b){return min(a,b);}
 };
+
+// keeps additional information (eg. query id)
+struct max_set{
+	typedef pair<int,int> T;
+	static constexpr T D=make_pair(INT_MIN,INT_MIN),DL=make_pair(0,0);
+	static T rv(T val,T lz,int lb,int rb){return lz.first?lz:val;}
+	static T upd(T&a,T b){return a=b;}
+	static T uni(T a,T b){return max(a,b);}
+};
+
