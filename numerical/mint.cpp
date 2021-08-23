@@ -45,6 +45,12 @@ using mint=modnum<mod,5>;
 //	if(k>n||k<0)return 0;
 //	return F[n]*IF[k]*IF[n-k];
 //}
+//// number of valid bracket sequences / unlabeled binary trees ...
+//mint catalan(int n){
+//	return F[2*n]*IF[n+1]*IF[n];
+//}
+ 
+//// put this in main
 //F[0]=IF[0]=IF[1]=1;
 //for(int i=2;i<MX;++i)IF[i]=mod-int((mod/i)*IF[mod%i])%mod;
 //for(int i=1;i<MX;++i)F[i]=i*F[i-1],IF[i]*=IF[i-1];

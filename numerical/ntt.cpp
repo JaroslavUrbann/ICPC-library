@@ -7,7 +7,7 @@ void ntt(vector<T>&a){
 	static vector<T>rt(2,1);
 	for(static int k=2,s=2;k<n;k*=2,++s){
 		rt.resize(n);
-		T z[]={1,pow(T::root(),T::mod()>>s)};
+		T z[]={1,mpow(T::root(),T::mod()>>s)};
 		for(int i=k;i<2*k;++i)rt[i]=rt[i/2]*z[i&1];
 	}
 	vector<int>rev(n);

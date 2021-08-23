@@ -22,20 +22,29 @@ struct P{
 
 typedef int T; // data
 typedef int B; // boundry
-static const B inf=numeric_limits<T>::max()>>1;
+static const T tinf=numeric_limits<T>::max()>>1;
+static const B binf=numeric_limits<T>::max()>>1;
 struct ST;
 typedef P<ST> ptr;
 
 struct ST{
-	array<ptr,2>c;int sz=0;
-	B lb=-inf,rb=inf;
-	T val=-inf,madd=0,mset=inf;
+	array<ptr,2>c;int sz=1;
+	B lb=-binf,rb=binf;
+	T val=-tinf,madd=0,mset=tinf;
+	ST()=default;
+	ST(T val,B l=-binf,B r=binf):val(val),lb(l),rb(r){}
 };
 
+void add(ptr u,T x,B l,B r);
+void setu(ptr u,T x,B l,B r);
+
+// kind of loses its point when lazy is already applied, maybe consider using this
+// lazy design with treap & other stuff as well
+// has to delete lazy
 ST real(ptr u){
 	if(!u)return ST();
 	ST res(*u);
-	res.madd=0,mset=inf;
+	res.madd=0,res.mset=tinf;
 	return res;
 }
 
@@ -43,17 +52,23 @@ ST real(ptr u){
 ST uni(ST a,ST b){
 	ST res;
 	res.val=max(a.val,b.val);
-	res.sz=a.val+b.val;
+	res.sz=a.sz+b.sz;
 	return res;
 }
 
 void push(ptr u){
-	if(!u)return;
-	for(ptr c:u->c)if(c){
-		if(mset!=inf)set(c,mset);
-		else add(c,madd);
+	if(u->lb+1<u->rb){
+		if(!u->c[0]){
+			B m=(u->lb+u->rb)/2;
+			u->c[0]=new ST(0,u->lb,m);
+			u->c[1]=new ST(0,m,u->rb);
+		}
+		for(ptr c:u->c){
+			if(u->mset!=tinf)setu(c,u->mset,u->lb,u->rb);
+			else add(c,u->madd,u->lb,u->rb);
+		}
 	}
-	mset=inf,madd=0;
+	*u=real(u);
 }
 
 // assumes no lazy on u
@@ -65,32 +80,40 @@ ptr pull(ptr u){
 	return u;
 }
 
-PT query(ptr u,B l,B r){
-	if(!u||r<=lb||rb<=l)return PT();
-	if(l<=lb&&rb<=r)return real(u);
-	push(u);ST res;
-	for(ptr c:u->c)res=uni(res,query(c,l,r));
-	return res;
+ST query(ptr u,B l,B r){
+	if(!u||r<=u->lb||u->rb<=l)return ST();
+	if(l<=u->lb&&u->rb<=r)return real(u);
+	push(u);
+	return uni(query(u->c[0],l,r),query(u->c[1],l,r));
 }
 
-void update(ptr u,B l,B r,T x,bool add){
-	if(!u||r<=lb||rb<=l)return; // if !u => create node
-	if(l<=lb&&rb<=r){
-		if(add){
-			u->madd=0,u->mset=u->val=x;
-		else{
-			if(mset!=inf)mset+=x;
-			else madd+=x;
-			val+=x;
-		}
+void add(ptr u,T x,B l,B r){
+	if(!u||r<=u->lb||u->rb<=l)return;
+	if(l<=u->lb&&u->rb<=r){
+		if(u->mset!=tinf)u->mset+=x;
+		else u->madd+=x;
+		u->val+=x;
 	}else{
-		for(ptr c:u->c)add(c,l,r,x,add);
+		push(u);
+		for(ptr c:u->c)add(c,x,l,r);
+		pull(u);
+	}
+}
+
+void setu(ptr u,T x,B l,B r){
+	if(!u||r<=u->lb||u->rb<=l)return;
+	if(l<=u->lb&&u->rb<=r)u->madd=0,u->mset=u->val=x;
+	else{
+		push(u);
+		for(ptr c:u->c)setu(c,x,l,r);
 		pull(u);
 	}
 }
 
 // you can merge & split segtrees in amortized log(n)
 // it's useful: https://codeforces.com/blog/entry/49446
+// PAY ATTENTION TO SZ, so sz==1 only at leafs, 0 at internal nodes
+// (=> what are internal nodes when using lazy? etc...)
 
 // merges 2 segtrees
 ptr merge(ptr u,ptr v){

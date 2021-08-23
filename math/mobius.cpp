@@ -10,7 +10,7 @@ typedef long long ll;
 // dělá to takovou prvočíslovou inkluzi-exkluzi, řekněme že mám čísla 1...N, potom tim že udělám mu(i) * F(dělitel=i)
 // kde F vyřizuje všechny čísla s dělitelem i, tak dělám inkluzi-exkluzi, protože 1 zahrne všechny dělitele 1,
 // 2 odebere všechny dělitele dvojky, 3 odebere všechny dělitele dvojky, 6 zahrne všechny dělitele 2*3 (byly odebraný dvakrát).
-// zbydou jenom prvky který maj dělitele jenom 1?
+// zbydou jenom prvky který maj společnýho dělitele jenom 1. - může to trvat jen O(F * log(N))
 
 vector<int>muarr(int n){
 	vector<int>comp(n);

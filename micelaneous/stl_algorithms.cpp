@@ -56,7 +56,7 @@ set_symmetric_difference(all(x),all(y),back_inserter(res)); // union\intersectio
 set_intersection(all(x),all(y),back_inserter(res));
 set_union(all(x),all(y),back_inserter(res));
 includes(all(x),all(y)); // is y a subset of x?
-merge(all(x),all(y));
+merge(all(x),all(y),z.begin()); // z should be allocated
 
 move(f,l,m); // f..l is moved to m...f-l+m
 copy(f,l,m); // f..l is copied to m...f-l+m
