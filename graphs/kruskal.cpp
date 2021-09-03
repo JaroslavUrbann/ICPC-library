@@ -8,44 +8,23 @@
 // it form a component (compress it's edges to 1 vertex), now you have k vetices
 // run k^2 algorithm to make the spanning tree (O(k^2) = O(m^2/n^2) = O(m/n^2 * m) = O(m))
 
-// proper dsu
-vector<int>p,sz;
-
-int find(int u){return p[u]==u?u:p[u]=find(p[u]);}
-
-void uni(int u,int v){
-	u=find(u);v=find(v);
-	if(u!=v){
-		if(sz[u]>sz[v])swap(u,v);
-		p[u]=p[v];
-		sz[v]+=sz[u];
-	}
-}
-// proper dsu
-
-
-struct edge{
-	int f,t;
-	ll w;
-	bool operator<(const edge&a)const{return w<a.w;}
-};
-
-// g has to be {weight, to}
-// change input to edges if it's convenient
-vector<edge>kruskal(vector<vector<pair<ll,int>>>&g){
-	int n=g.size();
-	vector<edge>edges;
-	for(int i=0;i<n;++i)
-		for(auto e:g[i])
-			edges.push_back({i,e.second,e.first});
-	sort(edges.begin(),edges.end());
-	sz.assign(n,0);
-	p.resize(n);iota(p.begin(),p.end(),0);
-	vector<edge>res;
-	for(auto e:edges)
-		if(find(e.f)!=find(e.t)){
-			uni(e.f,e.t);
-			res.push_back(e);
+using W=ll;
+struct E{int u,v;W w;};
+struct Kruskal{
+	int n;
+	vector<int>par;
+	vector<E>eds;
+	Kruskal(int n):n(n),par(n,-1){}
+	void ae(int u,int v,W w){eds.push_back({u,v,w});}
+	int getp(int u){return par[u]<0?u:par[u]=getp(par[u]);}
+	vector<E>calc(){
+		sort(eds.begin(),eds.end(),[&](E&a,E&b){return a.w<b.w;});
+		vector<E>res;
+		for(auto[u,v,w]:eds)if(int pu=getp(u),pv=getp(v);pu!=pv){
+			if(par[pu]<par[pv])swap(pu,pv);
+			par[pv]+=par[pu],par[pu]=pv;
+			res.push_back({u,v,w});
 		}
-	return res;// edges of spaning tree
-}
+		return res;
+	}
+};

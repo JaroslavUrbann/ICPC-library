@@ -49,6 +49,15 @@ a vyjde mi že jich je (2n choose n-1). Takže to prostě odečtu.
 - c_{n+1} = i=0..n: suma c_i * c_{n-i}
 	- kde se sekvence závorek poprvý znovu dotkne země
 
+počet validních bracket sekvencí o délce 2*m rozdělenejch do n skupin:
+[je to cca ekvivalentní počtu bracket sekvencí když je prvních n-1 závorek '(', protože (((B1)B2)B3)]
+mint f(int n,int m){
+	if(n<0||m<0)return 0;
+	if(!n)return 1;
+	return choose(2*m+n-1,m)-choose(2*m+n-1,m+n);
+}
+
+
 De bruijn sequence
 B(m,n) = cyklickej string ve kterym se vyskytujou všechny možný substringy délky n
 nad abecedou o velikosti m. Má dýlku m^n, Dá se sestrojit jako euler tour grafu, ve kterym je m^(n-1) nodů a z každýho vede m edges do následnýho substringu.

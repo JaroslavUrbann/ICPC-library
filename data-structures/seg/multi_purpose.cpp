@@ -73,7 +73,7 @@ struct maxeq{
 		}
 	}
 	static maxeq rv(const maxeq&u,int lb,int rb){return maxeq(u.lz?u.lz:u.mx,DL,u.id);}
-	// only used once per query
+	// only used once per query, u can have lazy
 	static maxeq upd(maxeq&u,maxeq&v,int lb,int rb){
 		return u=maxeq(u.mx,rv(u,lb,rb).mx<=v.lz?v.lz:u.lz,rv(u,lb,rb).mx<=v.lz?v.id:u.id);
 	}

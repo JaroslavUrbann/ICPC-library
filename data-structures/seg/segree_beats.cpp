@@ -346,6 +346,24 @@ struct JiDriverSegmentTree {
     long long findGcd(int ql, int qr) {
         return findGcd(1, 0, n, ql, qr);
     }
+
+    void writeout(int v, int l, int r, int ql, int qr) {
+        if (qr <= l || r <= ql) {
+            return;
+        }
+        if (l+1==r) {
+//						write(tree[v].sum);putchar(' ');
+            cout<<tree[v].sum<<" ";
+						return;
+        }
+        pushToChildren(v, l, r);
+        int mid = (r + l) / 2;
+        writeout(2 * v, l, mid, ql, qr);writeout(2 * v + 1, mid, r, ql, qr);
+    }
+
+    void writeout(int ql, int qr) {
+        writeout(1, 0, n, ql, qr);
+    }
 } segTree;
 
 int main() {
