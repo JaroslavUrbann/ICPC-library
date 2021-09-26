@@ -12,7 +12,7 @@ struct ST{
 	T query(int l,int r,int lb,int rb,int u){
 		if(rb<=l||r<=lb)return T();
 		if(l<=lb&&rb<=r)return T::rv(t[u],lb,rb);
-		T::prop(t[u],t[2*u],t[2*u+1],lb,rb);
+		T::push(t[u],t[2*u],t[2*u+1],lb,rb);
 		int m=(lb+rb)/2;
 		return T::uni(query(l,r,lb,m,2*u),query(l,r,m,rb,2*u+1));
 	}
@@ -20,7 +20,7 @@ struct ST{
 	T update(int l,int r,int lb,int rb,int u,T x){
 		if(rb<=l||r<=lb)return T::rv(t[u],lb,rb);
 		if(l<=lb&&rb<=r)return T::rv(T::upd(t[u],x,lb,rb),lb,rb);
-		T::prop(t[u],t[2*u],t[2*u+1],lb,rb);
+		T::push(t[u],t[2*u],t[2*u+1],lb,rb);
 		int m=(lb+rb)/2;
 		return t[u]=T::uni(update(l,r,lb,m,2*u,x),update(l,r,m,rb,2*u+1,x));
 	}
@@ -38,7 +38,7 @@ struct mac{
 	static mac uni(const mac&a,const mac&b){ // assumes no lazy
 		return mac(min(a.mn,b.mn),DL,a.mn==b.mn?a.cnt+b.cnt:a.mn<b.mn?a.cnt:b.cnt);
 	}
-	static void prop(mac&p,mac&l,mac&r,int lb,int rb){
+	static void push(mac&p,mac&l,mac&r,int lb,int rb){
 		if(p.lz!=DL){
 			l.lz+=p.lz;
 			r.lz+=p.lz;
@@ -64,7 +64,7 @@ struct maxeq{
 	static maxeq uni(const maxeq&a,const maxeq&b){
 		return maxeq(max(a.mx,b.mx),DL,a.mx<b.mx?b.id:a.id);
 	}
-	static void prop(maxeq&p,maxeq&l,maxeq&r,int lb,int rb){
+	static void push(maxeq&p,maxeq&l,maxeq&r,int lb,int rb){
 		if(p.lz!=DL){
 			if(rv(l,lb,rb).mx<=p.lz)tie(l.lz,l.id)=tie(p.lz,p.id);
 			if(rv(r,lb,rb).mx<=p.lz)tie(r.lz,r.id)=tie(p.lz,p.id);

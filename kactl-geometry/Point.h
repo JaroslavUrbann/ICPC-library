@@ -1,17 +1,7 @@
-/**
- * Author: Ulf Lundstrom
- * Date: 2009-02-26
- * License: CC0
- * Source: My head with inspiration from tinyKACTL
- * Description: Class to handle points in the plane.
- * 	T can be e.g. double or long long. (Avoid int.)
- * Status: Works fine, used a lot
- */
-#pragma once
-
-#define _USE_MATH_DEFINES
 const ld EPS=1e-6;
 bool eq(ld a, ld b) { return fabs(a-b) <= fabs(a+b) * EPS || fabs(a-b) < EPS; }
+
+ld clmp(ld a,ld mn,ld mx){return min(mx,max(mn,a));}
 
 template <class T> int sgn(T x) { return (x > 0) - (x < 0); }
 template<class T>
@@ -35,9 +25,9 @@ struct Point {
 	// angle to x-axis in interval [-pi, pi], positive above y=0
 	ld angle() const { return atan2(y, x); }
 	// angle of two points when looking from this point [0, pi] (not tested)
-	ld angle(P v,P w){return acos(clamp(v.dot(w)/abs(v)/abs(w),-1.,1.));}
-	// counter-clockwise angle from b to c (not tested)
-	ld orientedAngle(P a,P b,P c){return a.cross(b,c)>=0?a.angle(b,c):2*M_PI-a.angle(b,c);}
+	ld angle(P v,P w){return acos(clmp((*this).dot(v,w)/(v-*this).dist()/(w-*this).dist(),ld(-1.),ld(1.)));}
+	// counter-clockwise angle from b to c when looking from a(not tested)
+	ld orientedAngle(P b,P c){return (*this).cross(b,c)>=0?(*this).angle(b,c):2*M_PI-(*this).angle(b,c);}
 	P unit() const { return *this/dist(); } // makes dist()=1
 	P perp() const { return P(-y, x); } // rotates +90 degrees
 	P normal() const { return perp().unit(); }

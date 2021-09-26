@@ -1,3 +1,4 @@
+// don't yeet the treap on the heap
 // ~ 470 MB, change accordingly
 static char buf[450<<20];
 void*operator new(size_t s){

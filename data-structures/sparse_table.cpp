@@ -1,5 +1,6 @@
-template<typename T>
+template<typename O>
 struct SparseTable{
+	using T=typename O::T;
 	int n,p;
 	vector<vector<T>>dp;
 	vector<int>lg;
@@ -8,30 +9,27 @@ struct SparseTable{
 		for(int i=2;i<=n;++i)lg[i]=lg[i/2]+1;
 		for(int i=1;i<p;++i)
 			for(int j=0,j2=(1<<(i-1));j2<n;++j,++j2)
-				dp[i][j]=T::uni(dp[i-1][j],dp[i-1][j2]);
+				dp[i][j]=O::uni(dp[i-1][j],dp[i-1][j2]);
 	}
 	// inclusive, exclusive
 	T query(int l,int r){
 		int x=lg[r-l];
-		return T::uni(dp[x][l],dp[x][r-(1<<x)]);
+		return O::uni(dp[x][l],dp[x][r-(1<<x)]);
 	}
 };
 
 struct maxq{
-	typedef int T;
-	static const T D=0;
-	T x,idx;
-	maxq(T x=D,T idx=0):x(x),idx(idx){}
-	operator T(){return x;}
-	static maxq uni(maxq a,maxq b){return maxq(max(a.x,b.x),a.x<b.x?b.idx:a.idx);}
+	typedef ll T;
+	static T uni(T a,T b){return max(a,b);}
+};
+
+struct minq{
+	typedef ll T;
+	static T uni(T a,T b){return min(a,b);}
 };
 
 struct gcdq{
 	typedef ll T;
-	static const T D=0;
-	T x;
-	gcdq(T x=D):x(x){}
-	operator T(){return x;}
-	static gcdq uni(gcdq a,gcdq b){return gcdq(__gcd(a.x,b.x));}
+	static T uni(T a,T b){return __gcd(a,b);}
 };
 
